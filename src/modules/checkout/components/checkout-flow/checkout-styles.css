@@ -1,0 +1,379 @@
+/* Checkout Progress Steps */
+.checkout_progress {
+  margin-bottom: 2rem;
+}
+
+.checkout_progress .step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.checkout_progress .step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.checkout_progress .step.active .step-number {
+  background: #007bff;
+  color: white;
+}
+
+.checkout_progress .step.completed .step-number {
+  background: #28a745;
+  color: white;
+}
+
+.checkout_progress .step-title {
+  font-size: 0.875rem;
+  color: #6c757d;
+  text-align: center;
+}
+
+.checkout_progress .step.active .step-title {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.checkout_progress .step.completed .step-title {
+  color: #28a745;
+}
+
+.checkout_progress .step-line {
+  height: 2px;
+  background: #e9ecef;
+  flex: 1;
+  margin: 0 1rem;
+  margin-top: 20px;
+}
+
+.checkout_progress .step.completed + .step-line {
+  background: #28a745;
+}
+
+/* Address Step Styles */
+.checkout_address_section .checkout_header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.checkout_address_section .checkout_header h3 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.checkout_address_section .checkout_header p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+.checkout_address_section .checkout_header svg {
+  width: 20px;
+  height: 20px;
+}
+
+.checkout_single_address {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.checkout_single_address:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.checkout_single_address input[type="radio"]:checked + label {
+  color: #007bff;
+}
+
+.checkout_single_address input[type="radio"]:checked ~ .checkout_single_address {
+  border-color: #007bff;
+  background-color: #f8f9ff;
+}
+
+.checkout_single_address label span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.checkout_single_address label svg {
+  width: 16px;
+  height: 16px;
+  color: #6c757d;
+}
+
+.add_new_address button {
+  border: 2px dashed #007bff;
+  background: transparent;
+  color: #007bff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.add_new_address button:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* Payment Step Styles */
+.checkout_payment_section .payment_methods {
+  margin-bottom: 2rem;
+}
+
+.payment_option {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.payment_option:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.payment_option input[type="radio"]:checked + label {
+  color: #007bff;
+}
+
+.payment_option input[type="radio"]:checked ~ .payment_option {
+  border-color: #007bff;
+  background-color: #f8f9ff;
+}
+
+.payment_info h5 {
+  margin-bottom: 0.25rem;
+  color: #2c3e50;
+}
+
+.payment_info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.card_details_form {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.card_details_form h5 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+/* Order Summary Styles */
+.cart_page_summary {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.cart_page_summary h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.order_item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.order_item:last-child {
+  border-bottom: none;
+}
+
+.item_image img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.item_details h6 {
+  margin-bottom: 0.25rem;
+  color: #2c3e50;
+}
+
+.item_details p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.item_price {
+  font-weight: 600;
+  color: #007bff !important;
+}
+
+.price_breakdown {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.price_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.price_row.total {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e9ecef;
+  font-size: 1.125rem;
+}
+
+.price_row.discount span:last-child {
+  color: #28a745;
+}
+
+/* Form Styles */
+.single_input {
+  margin-bottom: 1rem;
+}
+
+.single_input label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.single_input input,
+.single_input select,
+.single_input textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.single_input input:focus,
+.single_input select:focus,
+.single_input textarea:focus {
+  border-color: #007bff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button Styles */
+.common_btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.common_btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.common_btn i {
+  font-size: 0.875rem;
+}
+
+/* Review Step */
+.checkout_review {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 2rem;
+  border: 1px solid #e9ecef;
+}
+
+.checkout_review h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.review_section h5 {
+  color: #495057;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.review_section h5:first-child {
+  margin-top: 0;
+}
+
+.address_review {
+  background: white;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 1rem;
+}
+
+.address_review p {
+  margin: 0.25rem 0;
+  color: #495057;
+}
+
+.review_actions {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .checkout_progress .step-line {
+    display: none;
+  }
+  
+  .checkout_progress {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .checkout_progress .step {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+}
