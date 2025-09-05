@@ -740,40 +740,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                       </p>
                     </div>
 
-                    {/* <h3
-                      className="price"
-                      style={{ fontSize: "2rem", fontWeight: "bold" }}
-                    >
-                      {cheapestPrice?.calculated_price ? (
-                        <>
-                          <span
-                            style={{
-                              fontSize: "2.0rem",
-                              fontWeight: "bold",
-                              color: "#090909",
-                            }}
-                          >
-                            {cheapestPrice.calculated_price}
-                          </span>
-                          {cheapestPrice.price_type === "sale" && (
-                            <span
-                              style={{
-                                textDecoration: "line-through",
-                                color: "#888",
-                                marginLeft: 12,
-                                fontSize: "1.2rem",
-                                fontWeight: "normal",
-                              }}
-                            >
-                              {cheapestPrice.original_price}
-                            </span>
-                          )}
-                        </>
-                      ) : (
-                        "Price N/A"
-                      )}
-                    </h3> */}
-
+                   
          
                     
                     <p className="short_description">

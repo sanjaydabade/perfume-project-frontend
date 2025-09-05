@@ -9,7 +9,7 @@ export default function RegisterPage({
   params: { countryCode: string }
 }) {
   const router = useRouter()
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({ 
     firstName: "",
     lastName: "",
     email: "",

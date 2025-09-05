@@ -551,7 +551,7 @@ const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
     }
   }
 
-  // Cart Totals (backend कडून आलं पाहिजे, इथे demo values दिलेत)
+ 
   const totalsData = {
     subtotal: cart?.subtotal || 0,
     discount_total: cart?.discount_total || 0,

@@ -43,43 +43,60 @@
 
 
 "use client"
-import { useEffect,useState } from "react"
-import $ from "jquery";
-import "slick-carousel"
+import { useEffect, useState, useRef } from "react"
 import axios from "axios"
-import ProductPreviewClient from "@modules/products/components/product-preview/client-wrapper"
 import { HttpTypes } from "@medusajs/types"
-
 import { getProductPrice } from "@lib/util/get-product-price"
-import PreviewPrice from "@modules/products/components/product-preview/price"
+import { addToCart } from "@lib/data/cart"
+import { useParams } from "next/navigation"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+// Dynamically import toast to avoid SSR issues
+let toast: any;
+if (typeof window !== 'undefined') {
+  import('react-toastify').then((module) => {
+    toast = module.toast;
+  });
+}
 
+
+const loadJquery = () => import('jquery')
+const loadSlickCarousel = () => import('slick-carousel')
+
+// Initialize jQuery only on client side
+let $: any
+if (typeof window !== 'undefined') {
+  $ = require('jquery')
+  require('slick-carousel')
+}
 
 const Hero = () => {
-const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
+  const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    axios
-      .get("http://localhost:9000/store/products", {
-        params: {
-          region_id: "reg_01K1G78QJ9STZ2XE68BEVPSKAN",
-          limit: 12,
-         
-        },
-        headers: {
-          "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY as string,
-        },
-      })
-      .then((res) => {
-        setProducts(res.data.products)
-        setLoading(false)
-      })
-      .catch((err) => {
+    if (typeof window === 'undefined') return
+    
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:9000/store/products", {
+          params: {
+            region_id: "reg_01K1G78QJ9STZ2XE68BEVPSKAN",
+            limit: 12,
+          },
+          headers: {
+            "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY as string,
+          },
+        })
+        setProducts(response.data.products)
+      } catch (err: any) {
         if (err.response) {
           console.log("API error response:", err.response.data)
         }
+      } finally {
         setLoading(false)
-      })
+      }
+    }
+    
+    fetchProducts()
   }, [])
 
   const region = {
@@ -88,57 +105,88 @@ const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
     currency_code: "inr",
   }
 
- 
+  const handleAddToCart = async (productId: string) => {
+    try {
+      // Get the first variant of the product
+      const variantId = products.find(p => p.id === productId)?.variants?.[0]?.id
+      
+      if (!variantId) {
+        toast?.error("Product variant not available")
+        return
+      }
 
-    useEffect(() => {
-    if (typeof window !== "undefined") {
-      const initSlick = () => {
-        if (
-          $(".beauty_banner_slider_large").length > 0 &&
-          $(".beauty_banner_slider_small").length > 0
-        ) {
-          $(".beauty_banner_slider_large").slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            autoplay: true,
-            arrows: false,
-            dots: false,
-            fade: true,
-            asNavFor: ".beauty_banner_slider_small",
-          });
-
-          $(".beauty_banner_slider_small").slick({
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            asNavFor: ".beauty_banner_slider_large",
-            autoplay: true,
-            autoplaySpeed: 3000,
-            dots: false,
-            arrows: false,
-            centerMode: true,
-            centerPadding: "0px",
-            focusOnSelect: true,
-            vertical: true,
-            responsive: [
-              {
-                breakpoint: 1200,
-                settings: {
-                  slidesToShow: 3,
-                },
-              },
-            ],
-          });
-        } else {
-          // Retry after delay if DOM is not ready
-          setTimeout(initSlick, 100);
-        }
-      };
-
-      // Initialize after short delay to ensure DOM is mounted
-      setTimeout(initSlick, 100);
+      await addToCart({
+        variantId,
+        quantity: 1,
+        countryCode: 'in',
+      })
+      
+      toast?.success("Product added to cart!")
+    } catch (error) {
+      console.error("Error adding to cart:", error)
+      toast?.error("Failed to add product to cart")
     }
+  }
+
+  // Initialize slick carousels
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const initSlick = () => {
+      if ($(".beauty_banner_slider_large").length > 0 && 
+          $(".beauty_banner_slider_small").length > 0) {
+        
+        // Initialize main slider
+        $(".beauty_banner_slider_large").slick({
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          arrows: false,
+          dots: false,
+          fade: true,
+          asNavFor: ".beauty_banner_slider_small",
+        });
+
+        // Initialize thumbnail slider
+        $(".beauty_banner_slider_small").slick({
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          asNavFor: ".beauty_banner_slider_large",
+          autoplay: true,
+          autoplaySpeed: 3000,
+          dots: false,
+          arrows: false,
+          centerMode: true,
+          centerPadding: "0px",
+          focusOnSelect: true,
+          vertical: true,
+          responsive: [
+            {
+              breakpoint: 1200,
+              settings: {
+                slidesToShow: 3,
+              },
+            },
+          ],
+        });
+      } else {
+        // Retry after delay if DOM is not ready
+        setTimeout(initSlick, 100);
+      }
+    };
+
+    // Initialize after short delay to ensure DOM is mounted
+    const timer = setTimeout(initSlick, 100);
+    
+    // Cleanup function to destroy sliders on unmount
+    return () => {
+      clearTimeout(timer);
+      if ($ && $.fn && $.fn.slick) {
+        $(".beauty_banner_slider_large, .beauty_banner_slider_small").slick('unslick');
+      }
+    };
   }, []);
-  
+
   return (
     <>
    
@@ -506,7 +554,10 @@ const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
                             <img src="assets/images/beauty_pro_5.png" alt="Product" className="img-fluid w-100"/>
                             <ul className="btn_list">
                                 <li>
-                                    <a href="#"> <i className="far fa-heart"></i> </a>
+                                    <a href="#" onClick={(e) => {
+  e.preventDefault();
+  handleAddToCart(product.id);
+}}> <i className="far fa-heart"></i> </a>
                                 </li>
                                 <li>
                                     <a href="#"> <i className="far fa-exchange"></i> </a>
@@ -574,7 +625,10 @@ const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
               />
                 <ul className="btn_list">
                     <li>
-                    <a href="#"> <i className="far fa-heart"></i> </a>
+                    <a href="#" onClick={(e) => {
+  e.preventDefault();
+  handleAddToCart(product.id);
+}}> <i className="far fa-heart"></i> </a>
                     </li>
                     <li>
                     <a href="#"> <i className="far fa-exchange"></i> </a>
@@ -748,7 +802,7 @@ const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
                                             </ul>
                                             <ul className="btn_list">
                                                 <li>
-                                                    <a href="#"> <i className="far fa-heart"></i> </a>
+                                                    <a href="#" > <i className="far fa-heart"></i> </a>
                                                 </li>
                                                 <li>
                                                     <a href="#"> <i className="far fa-exchange"></i> </a>
@@ -781,7 +835,7 @@ const [products, setProducts] = useState<HttpTypes.StoreProduct[]>([])
                                             </ul>
                                             <ul className="btn_list">
                                                 <li>
-                                                    <a href="#"> <i className="far fa-heart"></i> </a>
+                                                    <a href="#" > <i className="far fa-heart"></i> </a>
                                                 </li>
                                                 <li>
                                                     <a href="#"> <i className="far fa-exchange"></i> </a>

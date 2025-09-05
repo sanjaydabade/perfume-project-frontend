@@ -120,69 +120,141 @@ export default function CheckoutPage({
   }
 
   // Place order (shared by summary button and form submit)
-  const handlePlaceOrder = async () => {
-    if (!termsAccepted) {
-      alert("Please accept the terms and conditions")
-      return
-    }
+  // const handlePlaceOrder = async () => {
+  //   if (!termsAccepted) {
+  //     alert("Please accept the terms and conditions")
+  //     return
+  //   }
 
-    if (!selectedPaymentMethod) {
-      alert("Please select a payment method")
-      return
-    }
+  //   if (!selectedPaymentMethod) {
+  //     alert("Please select a payment method")
+  //     return
+  //   }
 
-    if (!cart || !cart.items || cart.items.length === 0) {
-      alert("Your cart is empty")
-      return
-    }
+  //   if (!cart || !cart.items || cart.items.length === 0) {
+  //     alert("Your cart is empty")
+  //     return
+  //   }
 
-    try {
-      // Map our UI billingAddress into Medusa address shape
-      const [firstName, ...restName] = (billingAddress.name || "").trim().split(" ")
-      const lastName = restName.join(" ")
-      const medusaAddress = {
-        first_name: firstName || undefined,
-        last_name: lastName || undefined,
-        address_1: billingAddress.address || undefined,
-        address_2: undefined,
-        company: billingAddress.company || undefined,
-        postal_code: billingAddress.zip || undefined,
-        city: billingAddress.city || undefined,
-        country_code: (billingAddress.country || "").toLowerCase() || undefined,
-        province: billingAddress.state || undefined,
-        phone: billingAddress.phone || undefined,
-      }
+  //   try {
+  //     // Map our UI billingAddress into Medusa address shape
+  //     const [firstName, ...restName] = (billingAddress.name || "").trim().split(" ")
+  //     const lastName = restName.join(" ")
+  //     const medusaAddress = {
+  //       first_name: firstName || undefined,
+  //       last_name: lastName || undefined,
+  //       address_1: billingAddress.address || undefined,
+  //       address_2: undefined,
+  //       company: billingAddress.company || undefined,
+  //       postal_code: billingAddress.zip || undefined,
+  //       city: billingAddress.city || undefined,
+  //       country_code: (billingAddress.country || "").toLowerCase() || undefined,
+  //       province: billingAddress.state || undefined,
+  //       phone: billingAddress.phone || undefined,
+  //     }
 
-      const res = await fetch("/api/cart/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: billingAddress.email || customer?.email,
-          shipping_address: medusaAddress,
-          billing_address: medusaAddress,
-          payment_method: selectedPaymentMethod,
-        }),
-      })
-      if (!res.ok) {
-        const msg = await res.json().catch(() => null)
-        throw new Error(msg?.message || "Failed to complete cart")
-      }
-      const data = await res.json()
+  //     const res = await fetch("/api/cart/complete", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         email: billingAddress.email || customer?.email,
+  //         shipping_address: medusaAddress,
+  //         billing_address: medusaAddress,
+  //         payment_method: selectedPaymentMethod,
+  //       }),
+  //     })
+  //     if (!res.ok) {
+  //       const msg = await res.json().catch(() => null)
+  //       throw new Error(msg?.message || "Failed to complete cart")
+  //     }
+  //     const data = await res.json()
 
-      if (data?.type === "order" && data?.orderId) {
-        const cc = data?.countryCode || params.countryCode
-        // Redirect to account orders list (as requested)
-        window.location.href = `/${cc}/account/orders`
-        return
-      }
+  //     if (data?.type === "order" && data?.orderId) {
+  //       const cc = data?.countryCode || params.countryCode
+  //       // Redirect to account orders list (as requested)
+  //       window.location.href = `/${cc}/account/orders`
+  //       return
+  //     }
 
-      // Fallback
-      window.location.href = `/${params.countryCode}/account/orders`
-    } catch (error) {
-      console.error("Order submission error:", error)
-      alert("Error placing order. Please try again.")
-    }
+  //     // Fallback
+  //     window.location.href = `/${params.countryCode}/account/orders`
+  //   } catch (error) {
+  //     console.error("Order submission error:", error)
+  //     alert("Error placing order. Please try again.")
+  //   }
+  // }
+
+
+// Place order (shared by summary button and form submit)
+const handlePlaceOrder = async () => {
+  if (!termsAccepted) {
+    alert("Please accept the terms and conditions")
+    return
   }
+
+  if (!selectedPaymentMethod) {
+    alert("Please select a payment method")
+    return
+  }
+
+  if (!cart || !cart.items || cart.items.length === 0) {
+    alert("Your cart is empty")
+    return
+  }
+
+  try {
+    // Map our UI billingAddress into Medusa address shape
+    const [firstName, ...restName] = (billingAddress.name || "").trim().split(" ")
+    const lastName = restName.join(" ")
+    const medusaAddress = {
+      first_name: firstName || undefined,
+      last_name: lastName || undefined,
+      address_1: billingAddress.address || undefined,
+      address_2: undefined,
+      company: billingAddress.company || undefined,
+      postal_code: billingAddress.zip || undefined,
+      city: billingAddress.city || undefined,
+      country_code: (billingAddress.country || "").toLowerCase() || undefined,
+      province: billingAddress.state || undefined,
+      phone: billingAddress.phone || undefined,
+    }
+
+    const res = await fetch("/api/cart/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: billingAddress.email || customer?.email,
+        shipping_address: medusaAddress,
+        billing_address: medusaAddress,
+        payment_method: selectedPaymentMethod,
+      }),
+    })
+
+    if (!res.ok) {
+      const msg = await res.json().catch(() => null)
+      throw new Error(msg?.message || "Failed to complete cart")
+    }
+
+    const data = await res.json()
+
+    if (data?.type === "order" && data?.orderId) {
+      const cc = data?.countryCode || params.countryCode
+      router.push(`/${cc}/account/orders`)   // ✅ FIX
+      return
+    }
+
+    // Fallback
+    router.push(`/${params.countryCode}/account/orders`)  // ✅ FIX
+  } catch (error) {
+    console.error("Order submission error:", error)
+    alert("Error placing order. Please try again.")
+  }
+}
+
+
+
+
+
 
   if (loading) {
     return <div>Loading...</div>

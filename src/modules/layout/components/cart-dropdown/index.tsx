@@ -563,10 +563,10 @@ const CartDropdown = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }
 
       {/* Right side sliding panel */}
 
-      {/* <div className="mini_cart"> */}
+      <div className="mini_cart">
      <div
   className={`offcanvas offcanvas-end ${cartDropdownOpen ? "show" : ""}`}
-  tabIndex={-1}
+  // tabIndex={-1}
    id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
   style={{ visibility: cartDropdownOpen ? "visible" : "hidden" }}
 >
@@ -581,7 +581,7 @@ const CartDropdown = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }
       aria-label="Close"
       onClick={() => setCartDropdownOpen(false)}
     >
-      {/* <i className="far fa-times"></i> */}
+      <i className="far fa-times"></i>
     </button>
   </div>
 
@@ -636,7 +636,6 @@ const CartDropdown = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }
 
 
 
-
     ) : (
       <p>Your shopping bag is empty.</p>
     )}
@@ -657,7 +656,7 @@ const CartDropdown = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }
     ) : null}
   </div>
 </div> 
-{/* </div> */}
+</div>
 
     </>
   )
